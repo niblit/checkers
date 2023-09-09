@@ -1,4 +1,5 @@
 import pygame
+from enum import Enum
 
 FPS = 60
 
@@ -8,6 +9,35 @@ CELL_SIZE = SCREEN_SIZE / 8
 BACKGROUND = (0, 0, 0)
 LIGHT_CELL = (240, 217, 181)
 DARK_CELL = (181, 136, 99)
+
+
+class Piece(Enum):
+    Empty = 0
+    White = 1
+    Black = 2
+
+
+black = "../assets/b.svg"
+black_texture = pygame.transform.smoothscale(pygame.image.load(black), (CELL_SIZE, CELL_SIZE))
+
+white = "../assets/w.svg"
+white_texture = pygame.transform.smoothscale(pygame.image.load(white), (CELL_SIZE, CELL_SIZE))
+
+
+def get_rect(x, y):
+    return pygame.Rect(x, y, CELL_SIZE, CELL_SIZE)
+
+
+board = [
+    [Piece.Black for _ in range(8)],
+    [Piece.Black for _ in range(8)],
+    [Piece.Empty for _ in range(8)],
+    [Piece.Empty for _ in range(8)],
+    [Piece.Empty for _ in range(8)],
+    [Piece.Empty for _ in range(8)],
+    [Piece.White for _ in range(8)],
+    [Piece.White for _ in range(8)]
+]
 
 
 def main():
@@ -28,6 +58,7 @@ def main():
 
         # RENDER YOUR GAME HERE
         draw_board(screen)
+        draw_pieces(screen, board)
 
         # flip() the display to put your work on screen
         pygame.display.flip()
@@ -42,6 +73,18 @@ def draw_board(screen):
         for x in range(8):
             color = LIGHT_CELL if (x + y) % 2 == 0 else DARK_CELL
             pygame.draw.rect(screen, color, (x * CELL_SIZE, y * CELL_SIZE, CELL_SIZE, CELL_SIZE))
+
+
+def draw_pieces(screen, board):
+    for y in range(8):
+        for x in range(8):
+            piece = board[y][x]
+            if piece == Piece.Empty:
+                continue
+            elif piece == Piece.Black:
+                screen.blit(black_texture, get_rect(x * CELL_SIZE, y * CELL_SIZE))
+            elif piece == Piece.White:
+                screen.blit(white_texture, get_rect(x * CELL_SIZE, y * CELL_SIZE))
 
 
 if __name__ == "__main__":
